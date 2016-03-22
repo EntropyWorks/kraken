@@ -4,7 +4,15 @@ This document describes how to run a Kraken Kubernetes cluster locally using Ter
 
 The difference between running on a cloud environment (AWS) and locally is that instead of building a container and having that container connect to AWS (or other cloud) and running all the steps and possessing all the necessary software (Ansible, AWS client, terraform, terraform drivers, etc) the local host will run all of these steps and use a local hypervisor (Virtualbox by default) and use Samsung's terraform execute provider to run vagrant and provide it the necessary arguments for setting up the machines the cluster will run on. It should be noted that a docker container still runs on every virtual machine for the provisioning of that machine the same way the EC2 AMIs run docker to do the same.
 
-## OS X
+1. OS X Setup amd Requirements
+1. Linux Setup amd Requirements
+1. Release the Kraken! (aka Configure and Start your cluster)
+1. Interact with your kubernetes cluster
+1. Destroy Cluster
+
+----
+
+# 1. OS X Setup amd Requirements
 
 On OS X, brew is the means of obtaining Terraform and other components:
 
@@ -22,6 +30,9 @@ If terraform is having trouble finding the custom providers, try explicitly unin
       brew uninstall $formula
     done
     brew bundle
+    
+
+ 
 
 ## Adding terraform drivers if all other packages already installed
 
@@ -31,21 +42,25 @@ In the case where you already have a hypervisor (Virtualbox, Vmware Fusion, etc.
 
 Access [Terraform download page](https://www.terraform.io/downloads.html) to obtain the download for your OS. Unzip the archive, and copy all terraform* binaries in the uncompressed directory to ```/usr/local/bin```
 
-### Install terraform-provider-execute:
+#### Install terraform-provider-execute:
 
     brew tap Samsung-AG/terraform-provider-execute
     brew install terraform-provider-execute
 
-### Install terraform-provider-coreosbox
+#### Install terraform-provider-coreosbox
 
     brew tap Samsung-AG/terraform-provider-coreosbox
     brew install terraform-provider-coreosbox
 
-### Install ```kubectl```
+#### Install ```kubectl```
 
     brew install kubectl
 
-# Linux 
+
+You can now jump to **Release the Kraken** to continue.
+
+---
+# 2. Linux Setup amd Requirements
 
 With Linux, these components must be installed according to the following steps. The following shows installing on Debian-based Linux. Mileage may vary, and RH-based Linux will be different.
 
@@ -154,15 +169,20 @@ or build it:
 
     go get github.com/Samsung-AG/terraform-provider-coreos
 
-### Obtain the latest [kubectl](https://github.com/GoogleCloudPlatform/kubernetes/releases/latest). Make sure ```kubectl``` is in your PATH
+## Install latest [kubectl](https://github.com/GoogleCloudPlatform/kubernetes/releases/latest). Make sure ```kubectl``` is in your PATH
 
     wget https://github.com/kubernetes/kubernetes/releases/download/v1.2.0/kubernetes.tar.gz
     tar xvzf kubernetes.tar.gz
     sudo cp ./kubernetes/platforms/linux/amd64/kubectl /usr/local/bin/
 
-## Set up the cluster
+You can now jump to **Release the Kraken!** to continue.
 
-### Set up the cluster directory
+---
+# 3. Release the Kraken!
+Now that you have the required programs and packages installed its time to configure your the cluster.
+
+
+## Set up the cluster directory
 
 In your ```kraken``` git clone, create a terraform cluster directory. In the example below, the name of the cluster is ```test-cluster```
 
@@ -178,6 +198,7 @@ Create the terraform variables file for the cluster. It will reside in ```terraf
     cluster_name = "test-cluster"
     apiserver_ip_address = "192.168.1.3"
     ip_base = "192.168.1"
+
 
 
 ## Create the cluster!
@@ -197,7 +218,8 @@ Or using the ```test-cluster``` local cluster example above, you would run:
 
 If you don't specify the -state switch, terraform will write the current 'state' to pwd - which could be a problem if you are using multiple cluster types.
 
-## Interact with your kubernetes cluster
+
+# Interact with your kubernetes cluster
 Terraform will write a kubectl config file for you. To issue cluster commands just use
 
     kubectl <command>
@@ -229,8 +251,9 @@ Example output:
     NAME               CLUSTER-IP       EXTERNAL-IP        PORT(S)                      AGE
     kubernetes         10.100.0.1       <none>             443/TCP                      14h
     prometheus         10.100.249.101   nodes              9090/TCP,3000/TCP,9091/TCP   14h
-    
-## Destroy Cluster
+  
+---  
+# Destroy Cluster
 Destroy a running cluster by running:
 
     terraform destroy -input=false -state=terraform/<cluster type>/terraform.tfstate terraform/<cluster type>
