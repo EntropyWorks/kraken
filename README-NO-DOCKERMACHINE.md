@@ -64,6 +64,8 @@ You can now jump to **Release the Kraken** to continue.
 
 With Linux, these components must be installed according to the following steps. The following shows installing on Debian-based Linux. Mileage may vary, and RH-based Linux will be different.
 
+The following what tested on [Ubuntu 15.10 Server amd64](http://releases.ubuntu.com/15.10/ubuntu-15.10-server-amd64.iso).
+
 ## Debian-based pre-reqs
 
 ### Update debian packages
@@ -72,7 +74,7 @@ With Linux, these components must be installed according to the following steps.
     sudo apt-get dist-upgrade
 
 * Ensure ```/usr/local/bin``` is in your path.
-* ```sudo shutdown -r # force reboot and latest kernel to be run```
+
 
 ### Install prerequisite packages needed for Ansible and Go:
     sudo apt-get install python-pip python-dev build-essential unzip
@@ -97,12 +99,15 @@ With Linux, these components must be installed according to the following steps.
     sudo dpkg -i vagrant_1.8.1_x86_64.deb
 
 ## Install [Virtualbox](https://www.virtualbox.org/wiki/Downloads) 
-    wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
-    sudo sh -c \
-    	"echo 'deb http://download.virtualbox.org/virtualbox/debian vivid contrib' \
-    	> /etc/apt/sources.list.d/virtualbox.list"
-    sudo apt-get update
-    sudo apt-get install virtualbox 
+   
+    sudo apt-get install virtualbox     
+
+### Reboot to latest kernel
+During the install of virtualbox you may have some new kernel modules avaliable.
+
+	sudo apt-get update
+	sudo apt-get dist-upgrade -u -y
+	sudo shutdown -r now
 
 ## Install Go
 
@@ -243,9 +248,9 @@ To reach specific clusters, issue the follow command
 
     kubectl --cluster=<cluster_name> <command>
 
-for example
+following our example ```test-cluster``` from above.  You will need to specify the ```<cluster-name>``` if you have multiple clusters running.
     
-    kubectl --cluster=aws_kubernetes get nodes
+    kubectl --cluster=test-cluster get nodes
 
 Example output:
 
@@ -254,6 +259,9 @@ Example output:
     192.168.1.104   Ready     14h
     192.168.1.105   Ready     14h
     192.168.1.106   Ready     14h
+    
+You can also get more information 
+
     $ kubectl get pods,rc,services
     NAME               READY            STATUS             RESTARTS   AGE
     prometheus-a1zwz   2/4              CrashLoopBackOff   326        14h
