@@ -219,7 +219,7 @@ Or using the ```test-cluster``` local cluster example above, you would run:
 If you don't specify the -state switch, terraform will write the current 'state' to pwd - which could be a problem if you are using multiple cluster types.
 
 
-# Interact with your kubernetes cluster
+# 4. Interact with your kubernetes cluster
 Terraform will write a kubectl config file for you. To issue cluster commands just use
 
     kubectl <command>
@@ -253,7 +253,7 @@ Example output:
     prometheus         10.100.249.101   nodes              9090/TCP,3000/TCP,9091/TCP   14h
   
 ---  
-# Destroy Cluster
+# 5. Destroy Cluster
 Destroy a running cluster by running:
 
     terraform destroy -input=false -state=terraform/<cluster type>/terraform.tfstate terraform/<cluster type>
