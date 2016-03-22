@@ -94,12 +94,15 @@ With Linux, these components must be installed according to the following steps.
 
 ## Install [Vagrant](https://www.vagrantup.com/downloads.html) 
     wget https://releases.hashicorp.com/vagrant/1.8.1/vagrant_1.8.1_x86_64.deb
-    sudo dpkg vagrant_1.8.1_x86_64.deb
+    sudo dpkg -i vagrant_1.8.1_x86_64.deb
 
 ## Install [Virtualbox](https://www.virtualbox.org/wiki/Downloads) 
     wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
-    sudo echo "deb http://download.virtualbox.org/virtualbox/debian vivid contrib" > /etc/apt/sources.list.d/virtualbox.list
+    sudo sh -c \
+    	"echo 'deb http://download.virtualbox.org/virtualbox/debian vivid contrib' \
+    	> /etc/apt/sources.list.d/virtualbox.list"
     sudo apt-get update
+    sudo apt-get install virtualbox 
 
 ## Install Go
 
@@ -109,13 +112,14 @@ There are packages for go via ```apt``` on Ubuntu, but the most recent release o
     wget https://storage.googleapis.com/golang/go1.6.linux-amd64.tar.gz
     sudo tar -C /usr/local -xzf go1.6.linux-amd64.tar.gz
 
-### Create a user-level go directory:
-    export GOROOT=/usr/local/go
-
 ### Set paths for go 
 (add to ```.bashrc``` or ```.bash_profile```)
 
-    mkdir -p $HOME/go/bin 
+    if [ -d $HOME/go/bin ] ; then
+    	mkdir -p $HOME/go/bin 
+    if 
+    # user-level go directory
+    export GOROOT=/usr/local/go
     export GOPATH=$HOME/go
     export GOBIN=$GOPATH/bin
 
@@ -129,6 +133,7 @@ There are packages for go via ```apt``` on Ubuntu, but the most recent release o
     wget  https://releases.hashicorp.com/terraform/0.6.13/terraform_0.6.13_linux_amd64.zip
     unzip terraform_0.6.13_linux_amd64.zip
     sudo mv terraform-pro* /usr/local/bin/
+    sudo mv terraform /usr/local/bin/
 
 
 ## Install Terraform and Samsung Terraform providers
@@ -146,18 +151,26 @@ or build it:
     go get github.com/Samsung-AG/terraform-provider-execute
 
 ### Obtain [terraform-provider-coreos](https://github.com/Samsung-AG/homebrew-terraform-provider-coreos/releases) 
-
-build it:
-
-    go get github.com/Samsung-AG/terraform-provider-coreosbox
-    sudo mv $GOBIN /usr/local/bin
-
-### Obtain [terraform-provider-coreos](https://github.com/Samsung-AG/homebrew-terraform-provider-coreos/releases) 
 binary:
 
     wget https://github.com/Samsung-AG/homebrew-terraform-provider-coreos/releases/download/v0.0.1/terraform-provider-coreos_linux_amd64.tar.gz
     tar xvzf terraform-provider-coreos_linux_amd64.tar.gz
     sudo mv terraform-provider-coreos /usr/local/bin
+
+or build it:
+
+    go get github.com/Samsung-AG/terraform-provider-coreosbox
+    sudo mv $GOBIN /usr/local/bin
+
+### Obtain [terraform-provider-coreosbox](https://github.com/Samsung-AG/terraform-provider-coreosbox/releases)
+
+	wget https://github.com/Samsung-AG/terraform-provider-coreosbox/releases/download/v0.0.1/terraform-provider-coreosbox_linux_amd64.tar.gz
+	tar zxvf terraform-provider-coreosbox_linux_amd64.tar.gz
+	sudo mv terraform-provider-coreosbox /usr/local/bin/
+	
+or build it:
+	
+	go get github.com/Samsung-AG/terraform-provider-coreosbox
 
 ### Obtain [terraform-provider-coreosver](https://github.com/Samsung-AG/terraform-provider-coreosver/releases) 
 binary:
@@ -165,6 +178,7 @@ binary:
     wget https://github.com/Samsung-AG/terraform-provider-coreosver/releases/download/v0.0.1/terraform-provider-coreosver_linux_amd64.tar.gz
     tar xvzf terraform-provider-coreosver_linux_amd64.tar.gz
     sudo mv terraform-provider-coreosver /usr/local/bin
+    
 or build it:
 
     go get github.com/Samsung-AG/terraform-provider-coreos
@@ -186,13 +200,13 @@ Now that you have the required programs and packages installed its time to confi
 
 In your ```kraken``` git clone, create a terraform cluster directory. In the example below, the name of the cluster is ```test-cluster```
 
+    cd <git clone of kraken>
     mkdir terraform/local/test-cluster
 
 ### Edit the terraform variables file
 
-Create the terraform variables file for the cluster. It will reside in ```terraform/local/test-cluster``` as ```terraform.tfvars```. In this example, the user wants to use 192.168.1.0 network for the cluster, with 1 API server, and 3 minions:
-
-
+Create the terraform variables file for the cluster. It will reside in ```terraform/local/test-cluster/terraform.tfvars```. In this example, the user wants to use 192.168.1.0 network for the cluster, with 1 API server, and 3 minions:
+	
     apiserver_count = "1"
     node_count = "3"
     cluster_name = "test-cluster"
@@ -200,22 +214,19 @@ Create the terraform variables file for the cluster. It will reside in ```terraf
     ip_base = "192.168.1"
 
 
-
 ## Create the cluster!
 
 Once you are done with tools setup and variable settings you should be able to create a cluster:
 
-    terraform apply -input=false -state=terraform/<cluster type>/terraform.tfstate terraform/<cluster type>
 
-Or (overriding node_count variable)
-
-    terraform apply -input=false -state=terraform/aws/terraform.tfstate -var 'node_count=10' terraform/aws
-    
-Or using the ```test-cluster``` local cluster example above, you would run: 
+Using the example ```test-cluster``` local cluster example above, you would run: 
 
     terraform apply -input=false -state=terraform/local/test-cluster/terraform.tfstate -var-file=terraform/local/test-cluster/terraform.tfvars terraform/local
 
+If you want to create a new local cluster you will need another ```cluster-name``` directory that contains a ```terraform/local/<cluster-name>/terraform.tfvars``` file.
 
+    terraform apply -input=false -state=terraform/<cluster-name>/terraform.tfstate terraform/local
+    
 If you don't specify the -state switch, terraform will write the current 'state' to pwd - which could be a problem if you are using multiple cluster types.
 
 
