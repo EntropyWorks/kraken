@@ -40,7 +40,9 @@ In the case where you already have a hypervisor (Virtualbox, Vmware Fusion, etc.
 
 ### Install Terraform:
 
-Access [Terraform download page](https://www.terraform.io/downloads.html) to obtain the download for your OS. Unzip the archive, and copy all terraform* binaries in the uncompressed directory to ```/usr/local/bin```
+#### Install terraform
+    brew tap Homebrew/bundle
+    brew install terraform
 
 #### Install terraform-provider-execute:
 
@@ -64,7 +66,7 @@ You can now jump to **Release the Kraken** to continue.
 
 With Linux, these components must be installed according to the following steps. The following shows installing on Debian-based Linux. Mileage may vary, and RH-based Linux will be different.
 
-The following what tested on [Ubuntu 15.10 Server amd64](http://releases.ubuntu.com/15.10/ubuntu-15.10-server-amd64.iso).
+The following was tested on [Ubuntu 15.10 Server amd64](http://releases.ubuntu.com/15.10/ubuntu-15.10-server-amd64.iso).
 
 ## Debian-based pre-reqs
 
@@ -100,7 +102,7 @@ The following what tested on [Ubuntu 15.10 Server amd64](http://releases.ubuntu.
 
 ## Install [Virtualbox](https://www.virtualbox.org/wiki/Downloads) 
    
-    sudo apt-get install virtualbox     
+    sudo apt-get install virtualbox virtualbox-dkms
 
 ### Reboot to latest kernel
 During the install of virtualbox you may have some new kernel modules avaliable.
@@ -109,85 +111,28 @@ During the install of virtualbox you may have some new kernel modules avaliable.
 	sudo apt-get dist-upgrade -u -y
 	sudo shutdown -r now
 
-## Install Go
-
-There are packages for go via ```apt``` on Ubuntu, but the most recent release of go from the [official go site](https://golang.org/doc/install) is preferable
-
-### Obtain and un-archive the go package
-    wget https://storage.googleapis.com/golang/go1.6.linux-amd64.tar.gz
-    sudo tar -C /usr/local -xzf go1.6.linux-amd64.tar.gz
-
-### Set paths for go 
-(add to ```.bashrc``` or ```.bash_profile```)
-
-    if [ -d $HOME/go/bin ] ; then
-    	mkdir -p $HOME/go/bin 
-    if 
-    # user-level go directory
-    export GOROOT=/usr/local/go
-    export GOPATH=$HOME/go
-    export GOBIN=$GOPATH/bin
-
-
-## Install awscli
-    wget https://s3.amazonaws.com/aws-cli/awscli-bundle.zip
-    unzip awscli-bundle.zip
-    sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
-
 ## Install [Terraform ](https://www.terraform.io/downloads.html)
     wget  https://releases.hashicorp.com/terraform/0.6.13/terraform_0.6.13_linux_amd64.zip
     unzip terraform_0.6.13_linux_amd64.zip
     sudo mv terraform-pro* /usr/local/bin/
     sudo mv terraform /usr/local/bin/
 
-
 ## Install Terraform and Samsung Terraform providers
 
-### Obtain terraform-provider-execute 
+The next steps detail how to obtain the necessary Samsung terraform providers
 
-binary:
+### Obtain terraform-provider-execute 
 
     wget https://github.com/Samsung-AG/terraform-provider-execute/releases/download/v0.0.2/terraform-provider-execute_linux_amd64.tar.gz
     tar xvzf terraform-provider-execute_linux_amd64.tar.gz
     sudo mv terraform-provider-execute /usr/local/bin
     
-or build it:
-
-    go get github.com/Samsung-AG/terraform-provider-execute
-
-### Obtain [terraform-provider-coreos](https://github.com/Samsung-AG/homebrew-terraform-provider-coreos/releases) 
-binary:
-
-    wget https://github.com/Samsung-AG/homebrew-terraform-provider-coreos/releases/download/v0.0.1/terraform-provider-coreos_linux_amd64.tar.gz
-    tar xvzf terraform-provider-coreos_linux_amd64.tar.gz
-    sudo mv terraform-provider-coreos /usr/local/bin
-
-or build it:
-
-    go get github.com/Samsung-AG/terraform-provider-coreosbox
-    sudo mv $GOBIN /usr/local/bin
-
 ### Obtain [terraform-provider-coreosbox](https://github.com/Samsung-AG/terraform-provider-coreosbox/releases)
 
 	wget https://github.com/Samsung-AG/terraform-provider-coreosbox/releases/download/v0.0.1/terraform-provider-coreosbox_linux_amd64.tar.gz
 	tar zxvf terraform-provider-coreosbox_linux_amd64.tar.gz
 	sudo mv terraform-provider-coreosbox /usr/local/bin/
 	
-or build it:
-	
-	go get github.com/Samsung-AG/terraform-provider-coreosbox
-
-### Obtain [terraform-provider-coreosver](https://github.com/Samsung-AG/terraform-provider-coreosver/releases) 
-binary:
-
-    wget https://github.com/Samsung-AG/terraform-provider-coreosver/releases/download/v0.0.1/terraform-provider-coreosver_linux_amd64.tar.gz
-    tar xvzf terraform-provider-coreosver_linux_amd64.tar.gz
-    sudo mv terraform-provider-coreosver /usr/local/bin
-    
-or build it:
-
-    go get github.com/Samsung-AG/terraform-provider-coreos
-
 ## Install latest [kubectl](https://github.com/GoogleCloudPlatform/kubernetes/releases/latest). Make sure ```kubectl``` is in your PATH
 
     wget https://github.com/kubernetes/kubernetes/releases/download/v1.2.0/kubernetes.tar.gz
@@ -200,12 +145,16 @@ You can now jump to **Release the Kraken!** to continue.
 # 3. Release the Kraken!
 Now that you have the required programs and packages installed its time to configure your the cluster.
 
+### Clone the Kraken project
+
+    cd ~   ## or to a directory you want to clone the Kraken repo into.
+    git clone https://github.com/Samsung-AG/kraken
 
 ## Set up the cluster directory
 
 In your ```kraken``` git clone, create a terraform cluster directory. In the example below, the name of the cluster is ```test-cluster```
 
-    cd <git clone of kraken>
+    cd kraken
     mkdir terraform/local/test-cluster
 
 ### Edit the terraform variables file
