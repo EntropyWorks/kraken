@@ -18,3 +18,4 @@ _site/*
 *.tfvars
 density/*
 density_out/*
+ansible/callback_plugins/*.pyc
