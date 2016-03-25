@@ -1,0 +1,3 @@
+---
+# defaults file for kraken-local
+homebrew_url: https://raw.github.com/mxcl/homebrew/go/install

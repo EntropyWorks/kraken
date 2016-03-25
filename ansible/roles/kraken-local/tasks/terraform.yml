@@ -1,0 +1,10 @@
+---
+- name: Terraform destroy
+  shell: cd .. ; terraform destroy -force -input=false -state=terraform/local/test-cluster/terraform.tfstate -var-file=terraform/local/test-cluster/terraform.tfvars terraform/local
+  when: not apply_terraform
+
+- name: Terraform apply
+  shell: cd .. ; terraform apply -input=false -state=terraform/local/test-cluster/terraform.tfstate -var-file=terraform/local/test-cluster/terraform.tfvars terraform/local
+  when: apply_terraform
+
+
