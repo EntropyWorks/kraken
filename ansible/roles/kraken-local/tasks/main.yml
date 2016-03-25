@@ -1,0 +1,14 @@
+---
+- name: Figure out localhost Operating System"
+  group_by: key=os_{{ ansible_distribution }}
+
+- debug: var=ansible_distribution
+- debug: var=ansible_os_family
+
+- name: "OS X Darwin Family Config" 
+  include: os_MacOSX.yml
+  when: ansible_os_family == "Darwin"
+
+- name: "Debian Family Config"
+  include: os_Debian.yml
+  when: ansible_os_family == "Debian"
