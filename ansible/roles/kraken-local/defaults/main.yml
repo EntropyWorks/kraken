@@ -1,3 +1,46 @@
 ---
 # defaults file for kraken-local
+kraken:
+  apiserver_count: "1"
+  node_count: "3"
+  local_cluster_name: "test-cluster"
+  apiserver_ip_address: "10.168.88.10"
+  ip_base: "10.168.88"
+
+# Homebrew
 homebrew_url: https://raw.github.com/mxcl/homebrew/go/install
+
+# Vagrant
+vagrant:
+  url: https://releddases.hashicorp.com/vagrant
+  version: 1.8.1
+  arch: x86_64
+
+download_vagrant:
+  - "{{ vagrant.url }}/{{ vagrant.version  }}/vagrant_{{ vagrant.version  }}_{{ vagrant.arch }}.deb"
+
+# kubectl
+kudectl:
+  url: https://storage.googleapis.com/kubernetes-release/release
+  version: 1.1.8
+
+download_kubectl:
+  - "{{ kubectl.url }}/{{ kubectl.version }}/bin/{{ ansible_system|lower }}/amd64/kubectl"
+
+# Terraform
+terraform:
+  url: 
+    terraform: https://releases.hashicorp.com/terraform
+    provider_execute: https://github.com/Samsung-AG/terraform-provider-execute/releases/download
+    provider_coreosbox: https://github.com/Samsung-AG/terraform-provider-coreosbox/releases/download
+  version: 0.6.14
+  provider_execute_version: v0.0.2
+  provider_coreosbox_version: v0.0.1
+
+download_terraform_urls:
+  - "{{ terraform.url.terraform }}/{{ terraform.version }}/terraform_{{ terraform.version  }}_linux_amd64.zip"
+  - "{{ terraform.url.provider_execute }}/{{ terraform.provider_execute_version  }} /terraform-provider-execute_linux_amd64.tar.gz"
+  - "{{ terraform.url.provider_coreosbox }}/{{ terraform.provider_coreosbox_version  }}/terraform-provider-coreosbox_linux_amd64.tar.gz"
+
+
+

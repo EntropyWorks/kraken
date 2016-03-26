@@ -9,8 +9,8 @@
   include: os_MacOSX.yml
   when: ansible_os_family == "Darwin"
 
-- name: "Debian Family Config"
-  include: os_Debian.yml
+- name: "Debian Based Family Configs"
+  include: os_Debian-based.yml
   when: ansible_os_family == "Debian"
 
 - name: "Run terraform commands"
