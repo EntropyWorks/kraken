@@ -1,0 +1,35 @@
+---
+
+- include_vars: defaults/downloads.yml
+
+- stat: path=/usr/local/bin/terraform
+  register: terraform_installed
+
+- name: Download terraform bits
+  unarchive: src={{ item }} dest=/usr/local/bin copy=no
+  with_items: download_terraform_urls
+  ignore_errors: yes
+  when: terraform_installed.stat.exists == False
+
+- stat: path=/usr/bin/vagrant
+  register: vagrant_installed
+
+- name: Download Vagrant
+  get_url: url={{ item }} dest=/tmp
+  with_items: download_vagrant
+  when: vagrant_installed.stat.exists == False
+
+- name: Install Vagrant deb
+  apt: deb=/tmp/vagrant_{{ vagrant_version  }}_x86_64.deb state=present
+  when: vagrant_installed.stat.exists == False
+
+- stat: path=/usr/local/bin/kubectl
+  register: kubectl_installed
+
+- name: Download kubectl
+  get_url: url={{ item }} dest=/usr/local/bin/kubectl
+  with_items: download_kubectl
+  when: kubectl_installed.stat.exists == False
+
+- file: path=/usr/local/bin/kubectl owner=root group=root mode=0755
+  when: kubectl_installed.stat.exists == False
