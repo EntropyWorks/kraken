@@ -132,11 +132,11 @@ On a system with powershell:
 2. Create a new log in your Logentries account by clicking + Add New Log.
 3. Next, select Manual Configuration.
 4. Give your log a name of your choice, select Token TCP, and then click the Register new log button. A token will be displayed in green.
-5. Override logentries_token variable for your cluster type with the token value - either through a tfvars file or -var switch    
+5. Override logentries_token variable for your cluster type with the token value - either through a tfvars file or -var switch.    
 
 ## Using SysdigCloud
 1. Create an account on sysdigcloud.com
-2. Populate the terraform variable sysdigcloud_access_key with your sysdig cloud access key either in your terraform.tfvars file or via the -var switch.
+2. Populate the terraform variable sysdigcloud_access_key with your sysdig cloud access key either in your terraform.tfvars file or via the -var switch
 3. SysdigCloud is only included in your cluster if you supply the above key value.
 
 Limitations: Currently only works with sysdigcloud, not on premises.  Only works with a single apiserver running, not multiple.
