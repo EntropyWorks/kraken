@@ -19,3 +19,4 @@ _site/*
 density/*
 density_out/*
 ansible/callback_plugins/*.pyc
+ansible/roles/dochang.docker
