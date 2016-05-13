@@ -4,4 +4,4 @@
 - name: destroy kraken locally
   hosts: localhost
   roles:
-    - { role: kraken-local,  apply_terraform: false }
+    - { role: kraken-local,  apply_terraform: false , master_password: changeme , kraken_install_path: /tmp/testing-kraken }

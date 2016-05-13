@@ -5,4 +5,4 @@
   hosts: localhost
   roles:
     - { role: dochang.docker }
-    - { role: kraken-local,  apply_terraform: true }
+    - { role: kraken-local,  apply_terraform: true , master_password: changeme , kraken_install_path: /tmp/testing-kraken }

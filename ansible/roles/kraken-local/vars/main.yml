@@ -1,2 +1,3 @@
 ---
 # vars file for kraken-local
+kraken_install_path: /opt/kraken

@@ -4,7 +4,6 @@ required_packages:
   - apt-show-versions
   - apt-transport-https
   - ca-certificates
-  - python-pip
   - python-dev
   - build-essential
   - unzip

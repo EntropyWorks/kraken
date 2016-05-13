@@ -7,7 +7,7 @@
 
 - name: Download terraform bits
   unarchive: src={{ item }} dest=/usr/local/bin copy=no
-  with_items: download_terraform_urls
+  with_items: ({{download_terraform_urls}})
   ignore_errors: yes
   when: terraform_installed.stat.exists == False
 
@@ -16,7 +16,7 @@
 
 - name: Download Vagrant
   get_url: url={{ item }} dest=/tmp
-  with_items: download_vagrant
+  with_items: ({{download_vagrant}}')
   when: vagrant_installed.stat.exists == False
 
 - name: Install Vagrant deb
@@ -28,7 +28,8 @@
 
 - name: Download kubectl
   get_url: url={{ item }} dest=/usr/local/bin/kubectl
-  with_items: download_kubectl
+  #with_items: download_kubectl
+  with_items: ('{{download_kubectl}}')
   when: kubectl_installed.stat.exists == False
 
 - file: path=/usr/local/bin/kubectl owner=root group=root mode=0755

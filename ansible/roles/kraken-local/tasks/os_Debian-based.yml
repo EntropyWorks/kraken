@@ -16,6 +16,7 @@
   when: ansible_os_family == 'Debian'
 
 - name: "Install packages"
+  become_user: root
   action: "{{ ansible_pkg_mgr }} name={{ item }}"
   with_items: required_packages
 
