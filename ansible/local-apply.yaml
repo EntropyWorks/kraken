@@ -1,6 +1,12 @@
 #!/usr/bin/env ANSIBLE_HOSTS="localhost," ANSIBLE_CONNECTION=local CALLBACK_PLUGINS=callback_plugins ANSIBLE_STDOUT_CALLBACK=skippy ansible-playbook -v  -connection=local
 # vim:ft=yaml
 ---
+- hosts: localhost
+#  vars:
+#    proxy_env:
+#      http_proxy: "http://proxy=web-proxy.corp.hp.com:8080"
+#      https_proxy: "http://proxy=web-proxy.corp.hp.com:8080"
+
 - name: apply kraken locally
   hosts: localhost
   roles:

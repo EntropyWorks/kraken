@@ -4,18 +4,22 @@
   register: kraken_installed
 
 - git: repo=http://github.com/Samsung-AG/kraken.git dest={{ kraken_install_path }} accept_hostkey=true
+  become: yes
   when: kraken_installed.stat.exists == False
 
 - file: path={{ kraken_install_path }}/terraform/local/{{ kraken.local_cluster_name }} state=directory
+  become: yes
+
 - template: src=terraform.ftvars.j2 dest={{ kraken_install_path }}/terraform/local/{{ kraken.local_cluster_name }}/terraform.tfvars
+  become: yes
 
 - name: Terraform destroy
-  become_user: root
+  become: yes
   shell: cd {{ kraken_install_path }} && terraform destroy -force -input=false -state=terraform/local/{{ kraken.local_cluster_name }}/terraform.tfstate -var-file=terraform/local/{{ kraken.local_cluster_name }}/terraform.tfvars terraform/local
   when: not apply_terraform
 
 - name: Terraform apply
-  become_user: root
+  become: yes
   shell: cd {{ kraken_install_path }}  && terraform apply -input=false -state=terraform/local/{{ kraken.local_cluster_name }}/terraform.tfstate -var-file=terraform/local/{{ kraken.local_cluster_name }}/terraform.tfvars terraform/local
   when: apply_terraform
 

@@ -13,11 +13,12 @@
 
 - name: "Update Package Cache"
   apt: update_cache=yes cache_valid_time=3600
+  become: yes
   when: ansible_os_family == 'Debian'
 
 - name: "Install packages"
-  become_user: root
   action: "{{ ansible_pkg_mgr }} name={{ item }}"
+  become: yes
   with_items: required_packages
 
 - include: download.yml
